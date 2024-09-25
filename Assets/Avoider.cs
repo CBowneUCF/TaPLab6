@@ -92,3 +92,15 @@ public class Avoider : MonoBehaviour
         
     }
 }
+
+/*
+Sorting idea:
+
+Get points from Poisson Disc, sort through them either using Linq or a primitive sorting algorithm.
+
+(The Primitive Sorting Algorithm will loop through the whole list once, tracking the lowest number found, making a new list and feeding everything lower to the first spot on the list and everything higher to the last.)
+(This is not a perfect sort, but should put most of the closest points in the first half of the list, at the very least.)
+
+Then, check in order the new list whether it's in line of sight, hopefully having to check less points.
+
+*/
