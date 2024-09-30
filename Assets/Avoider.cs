@@ -5,7 +5,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Avoider : MonoBehaviour
 {
-	public Transform targetTransform;
+	public GameObject target;
 	public float moveSpeed;
 	public float scareRange;
 	public bool enableGizmos;
@@ -33,7 +33,7 @@ public class Avoider : MonoBehaviour
 			Debug.LogWarning("Avoider needs Nav Mesh Agent.");
 			issue = true;
 		}
-		if (targetTransform is null)
+		if (target is null)
 		{
 			Debug.LogWarning("Avoider needs Target");
 			issue = true;
@@ -63,7 +63,7 @@ public class Avoider : MonoBehaviour
 			foreach (Vector2 refPoint in sampler.Samples())
 			{
 				validPoints.Add(new(transform.position.x + refPoint.x - (scareRange / 2), transform.position.y, transform.position.z + refPoint.y - (scareRange / 2)));
-				if (Vector3.Distance(validPoints[^1], targetTransform.position) < 1f || CheckLineOfSight(validPoints[^1]))
+				if (Vector3.Distance(validPoints[^1], target.transform.position) < 1f || CheckLineOfSight(validPoints[^1]))
 				{
 					invalidPoints.Add(validPoints[^1]);
 					validPoints.Remove(validPoints[^1]);
@@ -83,12 +83,12 @@ public class Avoider : MonoBehaviour
 			isRunningAway = false;
 	}
 
-	bool AvoideeInRange() => Vector3.Distance(targetTransform.transform.position, transform.position) < scareRange;
+	bool AvoideeInRange() => Vector3.Distance(target.transform.position, transform.position) < scareRange;
 
 
 	bool CheckLineOfSight(Vector3 source) =>
-		Physics.Linecast(source, targetTransform.transform.position, out RaycastHit hitInfo)
-		&& hitInfo.collider.gameObject == targetTransform.gameObject;
+		Physics.Linecast(source, target.transform.position, out RaycastHit hitInfo)
+		&& hitInfo.collider.gameObject == target;
 
 	float DistanceCheck(Vector2 input) => Vector3.Distance(Vector3.zero, new(input.x, transform.position.y, input.y));
 
